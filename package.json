@@ -1,0 +1,23 @@
+{
+  "name": "graphql-advance",
+  "version": "1.0.0",
+  "description": "A grapQL advance practice project",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NazifaPushon/graphQL-advance.git"
+  },
+  "author": "Nazifa Mashiat Pushon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NazifaPushon/graphQL-advance/issues"
+  },
+  "homepage": "https://github.com/NazifaPushon/graphQL-advance#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
