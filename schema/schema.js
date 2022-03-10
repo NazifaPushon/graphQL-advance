@@ -6,6 +6,7 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
 } = require("graphql");
 const _ = require("lodash");
 
@@ -36,7 +37,7 @@ const AuthorType = new GraphQLObjectType({
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
     books: {
-      type: new GraphQLList(AuthorType),
+      type: new GraphQLList(BookType),
       async resolve(parent, args) {
         const books = await Book.find({authorId:parent.id})
         return books
@@ -92,10 +93,10 @@ const Mutation = new GraphQLObjectType({
       type: AuthorType,
       args: {
         name: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString) ,
         },
         age: {
-          type: GraphQLInt,
+          type: new GraphQLNonNull(GraphQLInt),
         },
       },
       async resolve(parent, args) {
@@ -107,13 +108,13 @@ const Mutation = new GraphQLObjectType({
       type: BookType,
       args: {
         name: {
-          type: GraphQLString,
+          type:new GraphQLNonNull(GraphQLString) ,
         },
         authorId: {
-          type: GraphQLID,
+          type:new GraphQLNonNull(GraphQLID) ,
         },
         genre: {
-          type: GraphQLString,
+          type:new GraphQLNonNull(GraphQLString) ,
         },
       },
       async resolve(parent, args) {
