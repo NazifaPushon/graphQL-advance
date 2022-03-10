@@ -20,8 +20,9 @@ const BookType = new GraphQLObjectType({
     genre: { type: GraphQLString },
     author: {
       type: AuthorType,
-      resolve(parent, args) {
-        // return _.find(authors, { id: parent.authorId });
+      async resolve(parent, args) {
+        const author = await Author.findOne({_id:parent.authorId})
+        return author
       },
     },
   }),
@@ -36,8 +37,9 @@ const AuthorType = new GraphQLObjectType({
     age: { type: GraphQLInt },
     books: {
       type: new GraphQLList(AuthorType),
-      resolve(parent, args) {
-        // return _.filter(books,{authorId:parent.id})
+      async resolve(parent, args) {
+        const books = await Book.find({authorId:parent.id})
+        return books
       },
     },
   }),
@@ -51,13 +53,15 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID },
       },
-      resolve(parent, args) {
-        return _.find(books, { id: args.id });
+      async resolve(parent, args) {
+        const book = await Book.findOne({_id:args.id})
+        return book;
       },
     },
     books: {
       type: new GraphQLList(BookType),
-      resolve() {
+      async resolve() {
+        const books = await Book.find({});
         return books;
       },
     },
@@ -66,14 +70,16 @@ const RootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID },
       },
-      resolve(parent, args) {
-        // return _.find(authors, { id: args.id });
+      async resolve(parent, args) {
+        const author = await Author.findOne({_id:args.id})
+        return author;
       },
     },
     authors: {
       type: new GraphQLList(AuthorType),
-      resolve() {
-        // return authors
+      async resolve() {
+        const authors = await Author.find({});
+        return authors;
       },
     },
   },
@@ -92,15 +98,33 @@ const Mutation = new GraphQLObjectType({
           type: GraphQLInt,
         },
       },
-      async resolve(parent,args){
-        const author = await Author.create(args)
-        return author
-      }
+      async resolve(parent, args) {
+        const author = await Author.create(args);
+        return author;
+      },
+    },
+    addBook: {
+      type: BookType,
+      args: {
+        name: {
+          type: GraphQLString,
+        },
+        authorId: {
+          type: GraphQLID,
+        },
+        genre: {
+          type: GraphQLString,
+        },
+      },
+      async resolve(parent, args) {
+        const book = await Book.create(args);
+        return book;
+      },
     },
   },
 });
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
-  mutation:Mutation
+  mutation: Mutation,
 });
